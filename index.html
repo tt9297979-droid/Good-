@@ -1,33 +1,103 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
-  <title>GOLD AI</title>
+<meta charset="UTF-8">
+<title>🔥 GOLD AI ULTRA</title>
+<style>
+  body {
+    background: #0b132b;
+    color: white;
+    text-align: center;
+    font-family: sans-serif;
+    padding: 20px;
+  }
+  .box {
+    background: #1c2541;
+    margin: 10px;
+    padding: 20px;
+    border-radius: 10px;
+  }
+</style>
 </head>
-<body style="background:black;color:white;text-align:center;">
+<body>
 
 <h1>🔥 GOLD AI ULTRA</h1>
 
-<div id="price">Loading...</div>
-<div id="signal">WAIT</div>
-<div id="analysis">--</div>
+<div class="box">📊 ราคา: <span id="price">Loading...</span></div>
+<div class="box">🎯 Signal: <span id="signal">WAIT</span></div>
+<div class="box">🧠 วิเคราะห์: <span id="analysis">--</span></div>
 
 <script>
-async function loadData() {
+let lastSignal = "";
+
+// =======================
+// 📊 ดึงราคาทอง (API จริง)
+// =======================
+async function getPrice() {
   try {
-    let res = await fetch("/api/gold");
+    let res = await fetch("https://api.metals.live/v1/spot/gold");
     let data = await res.json();
 
-    document.getElementById("price").innerText = data.price;
-    document.getElementById("signal").innerText = data.signal;
-    document.getElementById("analysis").innerText = data.analysis;
+    let price = data[0].price;
+    document.getElementById("price").innerText = price;
 
+    return price;
   } catch (e) {
     document.getElementById("price").innerText = "ERROR";
+    return null;
   }
 }
 
-setInterval(loadData, 5000);
-loadData();
+// =======================
+// 🧠 SMC Logic (AI)
+// =======================
+function analyze(price) {
+  let signal = "WAIT";
+  let text = "รอจังหวะ";
+
+  if (price > 4495) {
+    signal = "BUY";
+    text = "Break High → Buy";
+  } else if (price < 4485) {
+    signal = "SELL";
+    text = "Break Low → Sell";
+  }
+
+  document.getElementById("signal").innerText = signal;
+  document.getElementById("analysis").innerText = text;
+
+  return signal;
+}
+
+// =======================
+// 📢 ส่ง Telegram
+// =======================
+async function sendSignal(signal, price) {
+  if (signal === lastSignal) return;
+
+  lastSignal = signal;
+
+  await fetch("/api/send", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      message: `🔥 GOLD AI ULTRA\nSignal: ${signal}\nPrice: ${price}`
+    })
+  });
+}
+
+// =======================
+// 🚀 ตัวหลัก
+// =======================
+async function runBot() {
+  let price = await getPrice();
+  if (!price) return;
+
+  let signal = analyze(price);
+  sendSignal(signal, price);
+}
+
+setInterval(runBot, 5000);
 </script>
 
 </body>
