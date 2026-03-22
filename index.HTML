@@ -1,20 +1,73 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>🔥 GOLD AI ULTRA</title>
+
+<script src="https://s3.tradingview.com/tv.js"></script>
+
+<style>
+body{background:#0b1220;color:white;text-align:center;font-family:sans-serif;}
+.card{background:#1a233a;margin:10px;padding:15px;border-radius:10px;}
+.buy{color:#00ff88;font-size:24px;}
+.sell{color:#ff4d4d;font-size:24px;}
+.wait{color:gray;}
+</style>
+</head>
+
+<body>
+
+<h2>🔥 GOLD AI ULTRA</h2>
+
+<div id="tv_chart" style="height:400px;"></div>
+
+<div class="card">
+<h3>📊 ราคา</h3>
+<div id="price">Loading...</div>
+</div>
+
+<div class="card">
+<h3>🎯 Signal</h3>
+<div id="signal" class="wait">WAIT</div>
+<div id="sl"></div>
+<div id="tp"></div>
+</div>
+
+<div class="card">
+<h3>🧠 วิเคราะห์</h3>
+<div id="analysis">--</div>
+<div id="zone"></div>
+</div>
+
 <script>
 
-// ===== API MULTI SOURCE =====
+// ===== ตัวแปรสำคัญ =====
+let prices = [];
+let lastSignal = "";
+
+// ===== TradingView =====
+new TradingView.widget({
+  container_id:"tv_chart",
+  symbol:"OANDA:XAUUSD",
+  interval:"5",
+  theme:"dark",
+  width:"100%",
+  height:400
+});
+
+// ===== API =====
 async function getPrice(){
   try{
     let price;
 
-    // 🔹 API หลัก
     try{
-      const res = await fetch("https://api.metals.live/v1/spot/gold");
-      const data = await res.json();
-      price = data[0].price;
+      const r = await fetch("https://api.metals.live/v1/spot/gold");
+      const d = await r.json();
+      price = d[0].price;
     }catch{
-      // 🔹 API สำรอง
-      const res2 = await fetch("https://api.gold-api.com/price/XAUUSD");
-      const data2 = await res2.json();
-      price = data2.price;
+      const r2 = await fetch("https://api.gold-api.com/price/XAUUSD");
+      const d2 = await r2.json();
+      price = d2.price;
     }
 
     if(!price) return;
@@ -22,18 +75,18 @@ async function getPrice(){
     document.getElementById("price").innerText = price;
 
     prices.push(price);
-    if(prices.length > 120) prices.shift();
+    if(prices.length > 100) prices.shift();
 
     analyze(price);
 
   }catch(e){
-    console.log("ERROR:", e);
+    console.log(e);
   }
 }
 
-// ===== INDICATOR =====
+// ===== อินดิเคเตอร์ =====
 function RSI(){
-  if(prices.length < 14) return 50;
+  if(prices.length<14) return 50;
   let g=0,l=0;
   for(let i=1;i<prices.length;i++){
     let d=prices[i]-prices[i-1];
@@ -52,81 +105,58 @@ function EMA(p){
   return ema;
 }
 
-// ===== SMC CORE =====
-let lastHigh=0;
-let lastLow=999999;
-
+// ===== AI =====
 function analyze(price){
 
-  let rsi = RSI();
-  let ema50 = EMA(50);
-  let ema200 = EMA(200);
+  let rsi=RSI();
+  let ema50=EMA(50);
+  let ema200=EMA(200);
 
-  let trend = ema50 > ema200 ? "UP" : "DOWN";
+  let trend = ema50>ema200 ? "UP":"DOWN";
 
-  // ===== Liquidity =====
-  let high = Math.max(...prices);
-  let low = Math.min(...prices);
-
-  let stopHuntUp = price > high * 0.9995;
-  let stopHuntDown = price < low * 1.0005;
+  let high=Math.max(...prices);
+  let low=Math.min(...prices);
 
   let signal="WAIT";
-  let text="รอจังหวะ Sniper";
+  let text="รอจังหวะ";
   let zone="";
   let sl="",tp="";
 
-  // 🔴 SELL SNIPER
-  if(stopHuntUp && rsi>65 && trend==="DOWN"){
+  // SELL
+  if(price>=high*0.999 && rsi>65 && trend==="DOWN"){
     signal="SELL 🔴";
-    text="Stop Hunt + Liquidity Grab + Downtrend";
-    zone="📍 Supply Zone";
-
+    text="Liquidity + Downtrend";
+    zone="Supply Zone";
     sl=(price+10).toFixed(2);
     tp=(price-25).toFixed(2);
   }
 
-  // 🟢 BUY SNIPER
-  else if(stopHuntDown && rsi<35 && trend==="UP"){
+  // BUY
+  else if(price<=low*1.001 && rsi<35 && trend==="UP"){
     signal="BUY 🟢";
-    text="Stop Hunt + Liquidity Grab + Uptrend";
-    zone="📍 Demand Zone";
-
+    text="Liquidity + Uptrend";
+    zone="Demand Zone";
     sl=(price-10).toFixed(2);
     tp=(price+25).toFixed(2);
   }
 
   updateUI(signal,text,zone,sl,tp);
 
-  if(signal !== lastSignal && signal !== "WAIT"){
-    alertUser(signal,price,sl,tp);
-  }
-
-  lastSignal = signal;
+  lastSignal=signal;
 }
 
-// ===== ALERT =====
-function alertUser(signal,price,sl,tp){
+// ===== UI =====
+function updateUI(signal,text,zone,sl,tp){
+  let s=document.getElementById("signal");
 
-  // 🔔 Browser
-  if(Notification.permission==="granted"){
-    new Notification(signal,{
-      body:`${price} | SL:${sl} TP:${tp}`
-    });
-  }
+  s.innerText=signal;
+  s.className = signal.includes("BUY")?"buy":
+                signal.includes("SELL")?"sell":"wait";
 
-  // 🤖 Telegram
-  fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`,{
-    method:"POST",
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({
-      chat_id:CHAT_ID,
-      text:`🔥 ${signal}
-ราคา: ${price}
-SL: ${sl}
-TP: ${tp}`
-    })
-  });
+  document.getElementById("analysis").innerText=text;
+  document.getElementById("zone").innerText=zone;
+  document.getElementById("sl").innerText=sl?("SL: "+sl):"";
+  document.getElementById("tp").innerText=tp?("TP: "+tp):"";
 }
 
 // ===== START =====
@@ -134,3 +164,6 @@ setInterval(getPrice,4000);
 getPrice();
 
 </script>
+
+</body>
+</html>
