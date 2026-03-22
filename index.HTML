@@ -1,80 +1,39 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-<meta charset="UTF-8">
-<title>🔥 GOLD AI FINAL PRO</title>
-
-<script src="https://s3.tradingview.com/tv.js"></script>
-
-<style>
-body {background:#0b1220;color:white;text-align:center;font-family:sans-serif;}
-.card {background:#1a233a;padding:15px;margin:10px;border-radius:12px;}
-.buy {color:#00ff88;font-size:26px;}
-.sell {color:#ff4d4d;font-size:26px;}
-.wait {color:gray;font-size:22px;}
-.zone {color:orange;}
-</style>
-</head>
-
-<body>
-
-<h2>🔥 GOLD AI FINAL PRO</h2>
-
-<div id="tv_chart" style="height:400px;"></div>
-
-<div class="card">
-<h3>📊 ราคา</h3>
-<div id="price">--</div>
-</div>
-
-<div class="card">
-<h3>🎯 Signal</h3>
-<div id="signal" class="wait">WAIT</div>
-<div id="sl"></div>
-<div id="tp"></div>
-</div>
-
-<div class="card">
-<h3>🧠 วิเคราะห์</h3>
-<div id="analysis">--</div>
-<div id="zone" class="zone"></div>
-</div>
-
 <script>
-// ===== TradingView =====
-new TradingView.widget({
-  container_id:"tv_chart",
-  symbol:"OANDA:XAUUSD",
-  interval:"5",
-  theme:"dark",
-  width:"100%",
-  height:400
-});
 
-// ===== Telegram =====
-const TELEGRAM_TOKEN = "ใส่TOKEN";
-const CHAT_ID = "8077905290";
-
-// ===== DATA =====
-let prices=[];
-
-// ===== API =====
+// ===== API MULTI SOURCE =====
 async function getPrice(){
-  const res = await fetch("https://api.gold-api.com/price/XAUUSD");
-  const data = await res.json();
+  try{
+    let price;
 
-  let price=data.price;
-  document.getElementById("price").innerText=price;
+    // 🔹 API หลัก
+    try{
+      const res = await fetch("https://api.metals.live/v1/spot/gold");
+      const data = await res.json();
+      price = data[0].price;
+    }catch{
+      // 🔹 API สำรอง
+      const res2 = await fetch("https://api.gold-api.com/price/XAUUSD");
+      const data2 = await res2.json();
+      price = data2.price;
+    }
 
-  prices.push(price);
-  if(prices.length>100) prices.shift();
+    if(!price) return;
 
-  analyze(price);
+    document.getElementById("price").innerText = price;
+
+    prices.push(price);
+    if(prices.length > 120) prices.shift();
+
+    analyze(price);
+
+  }catch(e){
+    console.log("ERROR:", e);
+  }
 }
 
-// ===== RSI =====
+// ===== INDICATOR =====
 function RSI(){
-  if(prices.length<14) return 50;
+  if(prices.length < 14) return 50;
   let g=0,l=0;
   for(let i=1;i<prices.length;i++){
     let d=prices[i]-prices[i-1];
@@ -84,9 +43,8 @@ function RSI(){
   return 100-(100/(1+rs));
 }
 
-// ===== EMA =====
-function EMA(period){
-  let k=2/(period+1);
+function EMA(p){
+  let k=2/(p+1);
   let ema=prices[0];
   for(let i=1;i<prices.length;i++){
     ema=prices[i]*k + ema*(1-k);
@@ -94,85 +52,70 @@ function EMA(period){
   return ema;
 }
 
-// ===== MACD =====
-function MACD(){
-  return EMA(12)-EMA(26);
-}
-
-// ===== CORE =====
-let lastSignal="";
+// ===== SMC CORE =====
+let lastHigh=0;
+let lastLow=999999;
 
 function analyze(price){
 
-  let rsi=RSI();
-  let macd=MACD();
-  let ema50=EMA(50);
-  let ema200=EMA(200);
+  let rsi = RSI();
+  let ema50 = EMA(50);
+  let ema200 = EMA(200);
 
-  let trend = ema50>ema200 ? "UP" : "DOWN";
+  let trend = ema50 > ema200 ? "UP" : "DOWN";
 
-  let high=Math.max(...prices);
-  let low=Math.min(...prices);
+  // ===== Liquidity =====
+  let high = Math.max(...prices);
+  let low = Math.min(...prices);
+
+  let stopHuntUp = price > high * 0.9995;
+  let stopHuntDown = price < low * 1.0005;
 
   let signal="WAIT";
-  let text="รอจุดเข้า";
+  let text="รอจังหวะ Sniper";
   let zone="";
   let sl="",tp="";
 
-  // 🔴 SELL
-  if(price>=high*0.999 && rsi>70 && macd<0 && trend==="DOWN"){
+  // 🔴 SELL SNIPER
+  if(stopHuntUp && rsi>65 && trend==="DOWN"){
     signal="SELL 🔴";
-    text="Liquidity + Downtrend + RSI Overbought";
+    text="Stop Hunt + Liquidity Grab + Downtrend";
     zone="📍 Supply Zone";
 
-    sl=(price+12).toFixed(2);
-    tp=(price-30).toFixed(2);
+    sl=(price+10).toFixed(2);
+    tp=(price-25).toFixed(2);
   }
 
-  // 🟢 BUY
-  else if(price<=low*1.001 && rsi<30 && macd>0 && trend==="UP"){
+  // 🟢 BUY SNIPER
+  else if(stopHuntDown && rsi<35 && trend==="UP"){
     signal="BUY 🟢";
-    text="Liquidity + Uptrend + RSI Oversold";
+    text="Stop Hunt + Liquidity Grab + Uptrend";
     zone="📍 Demand Zone";
 
-    sl=(price-12).toFixed(2);
-    tp=(price+30).toFixed(2);
+    sl=(price-10).toFixed(2);
+    tp=(price+25).toFixed(2);
   }
 
   updateUI(signal,text,zone,sl,tp);
 
-  if(signal!==lastSignal && signal!=="WAIT"){
+  if(signal !== lastSignal && signal !== "WAIT"){
     alertUser(signal,price,sl,tp);
   }
 
-  lastSignal=signal;
-}
-
-// ===== UI =====
-function updateUI(signal,text,zone,sl,tp){
-  let s=document.getElementById("signal");
-  s.innerText=signal;
-
-  s.className = signal.includes("BUY")?"buy":
-                signal.includes("SELL")?"sell":"wait";
-
-  document.getElementById("analysis").innerText=text;
-  document.getElementById("zone").innerText=zone;
-  document.getElementById("sl").innerText=sl?"SL: "+sl:"";
-  document.getElementById("tp").innerText=tp?"TP: "+tp:"";
+  lastSignal = signal;
 }
 
 // ===== ALERT =====
 function alertUser(signal,price,sl,tp){
 
-  // Browser
+  // 🔔 Browser
   if(Notification.permission==="granted"){
     new Notification(signal,{
-      body:`XAUUSD ${price} | SL:${sl} TP:${tp}`
+      body:`${price} | SL:${sl} TP:${tp}`
     });
   }
 
-  // Telegram
+  // 🤖 Telegram
   fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`,{
     method:"POST",
     headers:{'Content-Type':'application/json'},
@@ -186,16 +129,8 @@ TP: ${tp}`
   });
 }
 
-// ขอสิทธิ์แจ้งเตือน
-if(Notification.permission!=="granted"){
-  Notification.requestPermission();
-}
-
-// ===== LOOP =====
-setInterval(getPrice,5000);
+// ===== START =====
+setInterval(getPrice,4000);
 getPrice();
 
 </script>
-
-</body>
-</html>
