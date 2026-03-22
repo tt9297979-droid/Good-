@@ -1,152 +1,85 @@
 <div id="price">Loading...</div>
 <div id="signal">WAIT</div>
 <div id="analysis">--</div>
+
 <script>
-// =====================
+// =========================
 // 🔥 CONFIG
-// =====================
-const TELEGRAM_TOKEN = "8165823416:AAE9HrB-xwSU7m4xS8zXhT02uvMAF2HaSJQ";
+// =========================
+const TELEGRAM_TOKEN = "ใส่ของใหม่ (อย่าใช้ตัวที่ส่งมาแล้ว)";
 const CHAT_ID = "8077905290";
 
 let lastSignal = "";
 
-// =====================
-// 🔥 API หลัก + สำรอง
-// =====================
+// =========================
+// 🔥 ดึงราคาทองจริง (ใช้ Yahoo Finance)
+// =========================
 async function getPrice() {
   try {
-    // 🥇 API หลัก
-    let res = await fetch("https://api.gold-api.com/price/XAU");
+    let res = await fetch("https://query1.finance.yahoo.com/v8/finance/chart/GC=F");
     let data = await res.json();
 
-    if (!data.price) throw "fail";
+    let price = data.chart.result[0].meta.regularMarketPrice;
+    document.getElementById("price").innerText = price.toFixed(2);
 
-    update(data.price);
+    analyze(price);
 
-  } catch {
-    try {
-      // 🥈 API สำรอง (FX)
-      let res = await fetch("https://api.exchangerate.host/latest?base=XAU&symbols=USD");
-      let data = await res.json();
-
-      let price = 1 / data.rates.USD * 1000;
-
-      update(price);
-
-    } catch {
-      document.getElementById("price").innerText = "ERROR";
-    }
+  } catch (e) {
+    document.getElementById("price").innerText = "ERROR";
+    console.log(e);
   }
 }
 
-// =====================
-// 🔥 AI CORE (โหดจริง)
-// =====================
-let prices = [];
-
-function update(price) {
-  document.getElementById("price").innerText = price.toFixed(2);
-
-  prices.push(price);
-  if (prices.length > 50) prices.shift();
-
-  analyze(price);
-}
-
-// =====================
-// 🔥 RSI
-// =====================
-function getRSI() {
-  if (prices.length < 14) return 50;
-
-  let gains = 0, losses = 0;
-
-  for (let i = prices.length - 14; i < prices.length; i++) {
-    let diff = prices[i] - prices[i - 1];
-    if (diff >= 0) gains += diff;
-    else losses -= diff;
-  }
-
-  let rs = gains / (losses || 1);
-  return 100 - (100 / (1 + rs));
-}
-
-// =====================
-// 🔥 ULTRA ANALYZE
-// =====================
+// =========================
+// 🔥 AI วิเคราะห์ (พื้นฐานก่อน)
+// =========================
 function analyze(price) {
+
   let signal = "WAIT";
-  let text = "";
+  let analysis = "";
 
-  let rsi = getRSI();
-
-  // 🔥 Trend
-  let trend = prices.length > 20 && price > prices[0] ? "UP" : "DOWN";
-
-  // =====================
-  // 🔥 SMC + RSI + Trend
-  // =====================
-  if (price > 4500 && rsi > 60 && trend === "DOWN") {
-    signal = "SELL";
-    text = "📦 Supply + RSI Overbought + Trend ลง";
+  if (price > 4500) {
+    signal = "SELL 🔴";
+    analysis = "เข้าโซนบน มีโอกาสลง (SMC: Liquidity)";
+  }
+  else if (price < 4450) {
+    signal = "BUY 🟢";
+    analysis = "โซนล่าง มีแรงรับ (Demand)";
+  } else {
+    signal = "WAIT";
+    analysis = "รอจังหวะ";
   }
 
-  else if (price < 4480 && rsi < 40 && trend === "UP") {
-    signal = "BUY";
-    text = "📦 Demand + RSI Oversold + Trend ขึ้น";
-  }
-
-  // 🔥 Stop Hunt
-  if (price > 4490 && price < 4500) {
-    text += " | ⚠️ Stop Hunt Zone";
-  }
-
-  // =====================
-  // 🔥 แสดงผล
-  // =====================
   document.getElementById("signal").innerText = signal;
-  document.getElementById("analysis").innerText = `${text} | RSI: ${rsi.toFixed(0)}`;
+  document.getElementById("analysis").innerText = analysis;
 
-  // =====================
-  // 🔔 แจ้งเตือน
-  // =====================
+  // =========================
+  // 🔔 แจ้ง Telegram
+  // =========================
   if (signal !== lastSignal && signal !== "WAIT") {
-    sendTelegram(signal, price, text);
-    notify(signal, price);
+    sendTelegram(signal + " | ราคา: " + price);
     lastSignal = signal;
   }
 }
 
-// =====================
-// 🔔 TELEGRAM
-// =====================
-function sendTelegram(signal, price, text) {
+// =========================
+// 🔥 ส่ง Telegram
+// =========================
+function sendTelegram(text) {
   fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
     method: "POST",
     headers: {"Content-Type": "application/json"},
     body: JSON.stringify({
       chat_id: CHAT_ID,
-      text: `🔥 ${signal}\n💰 ${price}\n📊 ${text}`
+      text: text
     })
   });
 }
 
-// =====================
-// 🔔 NOTIFICATION
-// =====================
-function notify(signal, price) {
-  if (Notification.permission === "granted") {
-    new Notification("Gold AI", {
-      body: `${signal} @ ${price}`
-    });
-  }
-}
-
-Notification.requestPermission();
-
-// =====================
-// 🚀 START
-// =====================
-setInterval(getPrice, 3000);
+// =========================
+// 🔁 LOOP
+// =========================
+setInterval(getPrice, 5000);
 getPrice();
+
 </script>
