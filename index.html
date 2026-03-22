@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GOLD AI</title>
+</head>
+<body style="background:black;color:white;text-align:center;">
+
+<h1>🔥 GOLD AI ULTRA</h1>
+
 <div id="price">Loading...</div>
 <div id="signal">WAIT</div>
 <div id="analysis">--</div>
@@ -12,7 +21,7 @@ async function loadData() {
     document.getElementById("signal").innerText = data.signal;
     document.getElementById("analysis").innerText = data.analysis;
 
-  } catch {
+  } catch (e) {
     document.getElementById("price").innerText = "ERROR";
   }
 }
@@ -20,3 +29,6 @@ async function loadData() {
 setInterval(loadData, 5000);
 loadData();
 </script>
+
+</body>
+</html>
