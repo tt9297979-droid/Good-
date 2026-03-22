@@ -1,0 +1,22 @@
+<div id="price">Loading...</div>
+<div id="signal">WAIT</div>
+<div id="analysis">--</div>
+
+<script>
+async function loadData() {
+  try {
+    let res = await fetch("/api/gold");
+    let data = await res.json();
+
+    document.getElementById("price").innerText = data.price;
+    document.getElementById("signal").innerText = data.signal;
+    document.getElementById("analysis").innerText = data.analysis;
+
+  } catch {
+    document.getElementById("price").innerText = "ERROR";
+  }
+}
+
+setInterval(loadData, 5000);
+loadData();
+</script>
