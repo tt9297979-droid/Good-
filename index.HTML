@@ -2,211 +2,200 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🔥 Gold AI Ultimate</title>
+<title>🔥 GOLD AI FINAL PRO</title>
+
 <script src="https://s3.tradingview.com/tv.js"></script>
 
 <style>
-body { font-family: Arial; background:#0f172a; color:white; text-align:center; }
-.container { max-width:1100px; margin:auto; }
-.card { background:#1e293b; padding:15px; margin:10px; border-radius:12px; }
-.buy { color:#22c55e; }
-.sell { color:#ef4444; }
-.wait { color:#facc15; }
+body {background:#0b1220;color:white;text-align:center;font-family:sans-serif;}
+.card {background:#1a233a;padding:15px;margin:10px;border-radius:12px;}
+.buy {color:#00ff88;font-size:26px;}
+.sell {color:#ff4d4d;font-size:26px;}
+.wait {color:gray;font-size:22px;}
+.zone {color:orange;}
 </style>
 </head>
 
 <body>
-<body>
 
-  <!-- กราฟ -->
-  <div id="chart"></div>
+<h2>🔥 GOLD AI FINAL PRO</h2>
 
-  <!-- 👇 ใส่ตรงนี้เลย -->
-  <div id="price">--</div>
-  <div id="signal">รอ</div>
-  <div id="analysis">--</div>
-
-</body>
-<div class="container">
-<h1>🚀 Gold AI Ultimate (SMC PRO)</h1>
-
-<div id="chart" style="height:400px;"></div>
+<div id="tv_chart" style="height:400px;"></div>
 
 <div class="card">
-<h2>📊 ราคา</h2>
-<p id="price">--</p>
+<h3>📊 ราคา</h3>
+<div id="price">--</div>
 </div>
 
 <div class="card">
-<h2>🎯 Signal</h2>
-<p id="signal">WAIT</p>
-<p id="sl"></p>
-<p id="tp"></p>
+<h3>🎯 Signal</h3>
+<div id="signal" class="wait">WAIT</div>
+<div id="sl"></div>
+<div id="tp"></div>
 </div>
 
 <div class="card">
-<h2>🧠 วิเคราะห์</h2>
-<p id="detail">--</p>
-</div>
-
+<h3>🧠 วิเคราะห์</h3>
+<div id="analysis">--</div>
+<div id="zone" class="zone"></div>
 </div>
 
 <script>
-// ===== ขอแจ้งเตือน =====
-if (Notification.permission !== "granted") {
+// ===== TradingView =====
+new TradingView.widget({
+  container_id:"tv_chart",
+  symbol:"OANDA:XAUUSD",
+  interval:"5",
+  theme:"dark",
+  width:"100%",
+  height:400
+});
+
+// ===== Telegram =====
+const TELEGRAM_TOKEN = "ใส่TOKEN";
+const CHAT_ID = "8077905290";
+
+// ===== DATA =====
+let prices=[];
+
+// ===== API =====
+async function getPrice(){
+  const res = await fetch("https://api.gold-api.com/price/XAUUSD");
+  const data = await res.json();
+
+  let price=data.price;
+  document.getElementById("price").innerText=price;
+
+  prices.push(price);
+  if(prices.length>100) prices.shift();
+
+  analyze(price);
+}
+
+// ===== RSI =====
+function RSI(){
+  if(prices.length<14) return 50;
+  let g=0,l=0;
+  for(let i=1;i<prices.length;i++){
+    let d=prices[i]-prices[i-1];
+    if(d>0) g+=d; else l+=Math.abs(d);
+  }
+  let rs=g/(l||1);
+  return 100-(100/(1+rs));
+}
+
+// ===== EMA =====
+function EMA(period){
+  let k=2/(period+1);
+  let ema=prices[0];
+  for(let i=1;i<prices.length;i++){
+    ema=prices[i]*k + ema*(1-k);
+  }
+  return ema;
+}
+
+// ===== MACD =====
+function MACD(){
+  return EMA(12)-EMA(26);
+}
+
+// ===== CORE =====
+let lastSignal="";
+
+function analyze(price){
+
+  let rsi=RSI();
+  let macd=MACD();
+  let ema50=EMA(50);
+  let ema200=EMA(200);
+
+  let trend = ema50>ema200 ? "UP" : "DOWN";
+
+  let high=Math.max(...prices);
+  let low=Math.min(...prices);
+
+  let signal="WAIT";
+  let text="รอจุดเข้า";
+  let zone="";
+  let sl="",tp="";
+
+  // 🔴 SELL
+  if(price>=high*0.999 && rsi>70 && macd<0 && trend==="DOWN"){
+    signal="SELL 🔴";
+    text="Liquidity + Downtrend + RSI Overbought";
+    zone="📍 Supply Zone";
+
+    sl=(price+12).toFixed(2);
+    tp=(price-30).toFixed(2);
+  }
+
+  // 🟢 BUY
+  else if(price<=low*1.001 && rsi<30 && macd>0 && trend==="UP"){
+    signal="BUY 🟢";
+    text="Liquidity + Uptrend + RSI Oversold";
+    zone="📍 Demand Zone";
+
+    sl=(price-12).toFixed(2);
+    tp=(price+30).toFixed(2);
+  }
+
+  updateUI(signal,text,zone,sl,tp);
+
+  if(signal!==lastSignal && signal!=="WAIT"){
+    alertUser(signal,price,sl,tp);
+  }
+
+  lastSignal=signal;
+}
+
+// ===== UI =====
+function updateUI(signal,text,zone,sl,tp){
+  let s=document.getElementById("signal");
+  s.innerText=signal;
+
+  s.className = signal.includes("BUY")?"buy":
+                signal.includes("SELL")?"sell":"wait";
+
+  document.getElementById("analysis").innerText=text;
+  document.getElementById("zone").innerText=zone;
+  document.getElementById("sl").innerText=sl?"SL: "+sl:"";
+  document.getElementById("tp").innerText=tp?"TP: "+tp:"";
+}
+
+// ===== ALERT =====
+function alertUser(signal,price,sl,tp){
+
+  // Browser
+  if(Notification.permission==="granted"){
+    new Notification(signal,{
+      body:`XAUUSD ${price} | SL:${sl} TP:${tp}`
+    });
+  }
+
+  // Telegram
+  fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`,{
+    method:"POST",
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      chat_id:CHAT_ID,
+      text:`🔥 ${signal}
+ราคา: ${price}
+SL: ${sl}
+TP: ${tp}`
+    })
+  });
+}
+
+// ขอสิทธิ์แจ้งเตือน
+if(Notification.permission!=="granted"){
   Notification.requestPermission();
 }
 
-// ===== Notify =====
-function notify(title, body) {
-  if (Notification.permission === "granted") {
-    new Notification(title, { body: body });
-  }
-}
-
-// ===== Telegram =====
-function sendTelegram(msg){
-  fetch(`https://api.telegram.org/botYOUR_BOT_TOKEN/sendMessage?chat_id=YOUR_CHAT_ID&text=${msg}`);
-}
-
-// ===== TradingView =====
-new TradingView.widget({
-  container_id: "chart",
-  symbol: "OANDA:XAUUSD",
-  interval: "5",
-  theme: "dark",
-  style: "1",
-  locale: "th",
-  width: "100%",
-  height: "400"
-});
-
-// ===== ดึงข้อมูลจริง =====
-async function getCandles(){
-  let res = await fetch("https://api.binance.com/api/v3/klines?symbol=XAUUSDT&interval=5m&limit=100");
-  let data = await res.json();
-  return data.map(c => ({
-    open:+c[1], high:+c[2], low:+c[3], close:+c[4], volume:+c[5]
-  }));
-}
-
-// ===== Logic =====
-function getTrend(data){
-  return data[data.length-1].close > data[data.length-20].close ? "UP" : "DOWN";
-}
-
-function detectBOS(data){
-  let last = data[data.length-1];
-  let hh = Math.max(...data.slice(-20).map(c=>c.high));
-  let ll = Math.min(...data.slice(-20).map(c=>c.low));
-  if(last.close > hh) return "UP";
-  if(last.close < ll) return "DOWN";
-  return "NONE";
-}
-
-function detectFVG(data){
-  let c1 = data[data.length-3];
-  let c3 = data[data.length-1];
-  if(c1.high < c3.low) return "UP";
-  if(c1.low > c3.high) return "DOWN";
-  return "NONE";
-}
-
-function volumeOK(data){
-  let avg = data.slice(-20).reduce((a,b)=>a+b.volume,0)/20;
-  return data[data.length-1].volume > avg;
-}
-
-// ===== วิเคราะห์ + แจ้งเตือน =====
-function analyze(data){
-  let price = data[data.length-1].close;
-  let trend = getTrend(data);
-  let bos = detectBOS(data);
-  let fvg = detectFVG(data);
-  let vol = volumeOK(data);
-
-  document.getElementById("price").innerText = price;
-
-  let signal="⏳ WAIT";
-  let sl="", tp="";
-
-  if(trend==="DOWN" && bos==="DOWN" && fvg==="DOWN" && vol){
-    signal="🔴 SELL";
-    sl = price + 20;
-    tp = price - 40;
-
-    let msg = `SELL XAUUSD\nEntry:${price}\nSL:${sl}\nTP:${tp}`;
-    notify("SELL SIGNAL", msg);
-    sendTelegram(msg);
-  }
-
-  if(trend==="UP" && bos==="UP" && fvg==="UP" && vol){
-    signal="🟢 BUY";
-    sl = price - 20;
-    tp = price + 40;
-
-    let msg = `BUY XAUUSD\nEntry:${price}\nSL:${sl}\nTP:${tp}`;
-    notify("BUY SIGNAL", msg);
-    sendTelegram(msg);
-  }
-
-  document.getElementById("signal").innerHTML = signal;
-  document.getElementById("sl").innerText = "SL: "+sl;
-  document.getElementById("tp").innerText = "TP: "+tp;
-  document.getElementById("detail").innerText = `${trend} | BOS:${bos} | FVG:${fvg} | VOL:${vol}`;
-}
-
 // ===== LOOP =====
-setInterval(async()=>{
-  let data = await getCandles();
-  analyze(data);
-},5000);
+setInterval(getPrice,5000);
+getPrice();
 
 </script>
 
 </body>
 </html>
-<script>
-let lastPrice = null;
-
-async function getPrice() {
-  try {
-    const res = await fetch("https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT");
-    const data = await res.json();
-    return parseFloat(data.price);
-  } catch (e) {
-    console.log("error", e);
-    return null;
-  }
-}
-
-async function update() {
-  const price = await getPrice();
-
-  if (!price) return;
-
-  document.getElementById("price").innerText = price.toFixed(2);
-
-  let signal = "WAIT";
-  let analysis = "กำลังวิเคราะห์...";
-
-  if (lastPrice !== null) {
-    if (price > lastPrice) {
-      signal = "BUY 🔺";
-      analysis = "แรงซื้อกำลังมา";
-    } else if (price < lastPrice) {
-      signal = "SELL 🔻";
-      analysis = "แรงขายกำลังมา";
-    }
-  }
-
-  document.getElementById("signal").innerText = signal;
-  document.getElementById("analysis").innerText = analysis;
-
-  lastPrice = price;
-}
-
-setInterval(update, 3000);
-update();
-</script>
