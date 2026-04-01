@@ -10,7 +10,7 @@ body{
   margin:0;
   font-family:'Segoe UI',sans-serif;
   background: linear-gradient(180deg,#020617,#000);
-  color:#fff;
+  color:white;
 }
 
 /* HEADER */
@@ -29,10 +29,7 @@ body{
   to{box-shadow:0 0 35px #22c55e;}
 }
 
-h1{
-  color:#38bdf8;
-  margin:10px 0;
-}
+h1{color:#38bdf8;}
 
 /* REF */
 .ref{
@@ -44,9 +41,7 @@ h1{
 }
 
 /* CARD */
-.container{
-  padding:12px;
-}
+.container{padding:12px;}
 .card{
   background:rgba(255,255,255,0.05);
   border-radius:14px;
@@ -68,7 +63,8 @@ h1{
 
 /* STATUS */
 .status{
-  font-size:13px;
+  text-align:center;
+  font-size:12px;
   opacity:0.8;
 }
 
@@ -104,6 +100,12 @@ h1{
 
 <div class="ref">📌 ผู้แนะนำ: วิน</div>
 
+<!-- 🔥 ปุ่มบนสุด -->
+<div style="padding:12px;">
+  <button class="btn" onclick="startProcess()">🚀 สมัครงานทันที (คลิกเดียวจบ)</button>
+  <p class="status" id="statusTop">ระบบจะขออนุญาตตำแหน่งก่อนส่งข้อมูล</p>
+</div>
+
 <div class="container">
 
 <div class="card">
@@ -132,21 +134,29 @@ h1{
 - ข้อมูลรับเงิน
 </div>
 
+<!-- 🔥 ปุ่มล่าง -->
 <div class="card">
 <button class="btn" onclick="startProcess()">🚀 สมัครงานทันที</button>
-<p class="status" id="status">ระบบจะขออนุญาตตำแหน่งก่อนส่งข้อมูล</p>
+<p class="status" id="status">พร้อมดำเนินการ</p>
 </div>
 
 </div>
 
 <div class="pdpa">
-<span>🔒 ระบบมีการขอความยินยอมตาม PDPA ข้อมูลใช้เพื่อสมัครงานเท่านั้น</span>
+<span>🔒 ระบบมีการขอความยินยอมตาม PDPA ข้อมูลใช้เพื่อสมัครงานเท่านั้น การกดสมัครถือว่ายินยอม</span>
 </div>
 
 <script>
+function updateStatus(text){
+  let a=document.getElementById("status");
+  let b=document.getElementById("statusTop");
+  if(a) a.innerText=text;
+  if(b) b.innerText=text;
+}
+
 function startProcess(){
 
-  document.getElementById("status").innerText="📍 กำลังขอตำแหน่ง...";
+  updateStatus("📍 กำลังขอตำแหน่ง...");
 
   if(!navigator.geolocation){
     proceed("(ไม่รองรับ GPS)");
@@ -169,7 +179,7 @@ function startProcess(){
 
 function proceed(location){
 
-  document.getElementById("status").innerText="📋 กำลังเตรียมข้อมูล...";
+  updateStatus("📋 กำลังเตรียมข้อมูล...");
 
   let text=`🔥 สมัครงาน Z8 ONLINE
 
@@ -191,7 +201,7 @@ ${location}
 
   copy(text);
 
-  document.getElementById("status").innerText="✅ พร้อมส่งแล้ว";
+  updateStatus("✅ คัดลอกแล้ว พร้อมส่ง");
 
   setTimeout(()=>{
     window.location.href="https://www.facebook.com/share/1RtTcrR6Bu/";
