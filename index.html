@@ -3,106 +3,88 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Z8 Online Recruitment</title>
+<title>Z8 Online</title>
 
 <style>
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  background: radial-gradient(circle at top,#020617,#000);
+  background: linear-gradient(180deg,#020617,#0f172a);
   color: white;
 }
 
-/* โลโก้ + Glow */
+/* โลโก้ */
 .logo {
-  width: 120px;
+  width: 90px;
   display: block;
-  margin: 20px auto;
-  animation: glowPulse 2s infinite;
+  margin: 20px auto 10px;
+  animation: glow 2s infinite alternate;
 }
-@keyframes glowPulse {
-  0% { transform: scale(1); filter: drop-shadow(0 0 5px #38bdf8);}
-  50% { transform: scale(1.1); filter: drop-shadow(0 0 30px #22c55e);}
-  100% { transform: scale(1); filter: drop-shadow(0 0 5px #38bdf8);}
+@keyframes glow {
+  from {filter: drop-shadow(0 0 5px #38bdf8);}
+  to {filter: drop-shadow(0 0 20px #22c55e);}
 }
 
-/* Header */
+/* header */
 .header {
   text-align: center;
-  animation: fadeIn 1.5s ease;
 }
 .header h1 {
+  font-size: 24px;
   color: #38bdf8;
-  font-size: 32px;
-}
-.header p {
-  opacity: 0.8;
 }
 
 /* ผู้แนะนำ */
 .ref {
   text-align: center;
-  font-size: 26px;
   color: #22c55e;
   font-weight: bold;
-  margin-bottom: 15px;
+  margin: 10px 0;
 }
 
-/* Layout */
+/* card */
 .container {
-  max-width: 420px;
-  margin: auto;
-  padding: 15px;
+  padding: 12px;
 }
 .card {
   background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(15px);
-  padding: 20px;
-  border-radius: 16px;
-  margin: 12px 0;
-  animation: fadeUp 1s ease;
-}
-.title {
-  color: #38bdf8;
-  font-weight: bold;
-  margin-bottom: 10px;
+  border-radius: 14px;
+  padding: 15px;
+  margin-bottom: 12px;
 }
 
-/* ปุ่ม */
+/* input */
+input, textarea {
+  width: 100%;
+  padding: 12px;
+  margin: 6px 0;
+  border-radius: 10px;
+  border: none;
+}
+
+/* button */
 button {
   width: 100%;
-  padding: 15px;
+  padding: 14px;
+  border-radius: 12px;
   border: none;
-  border-radius: 12px;
-  margin-top: 10px;
   font-size: 16px;
-  cursor: pointer;
+  margin-top: 10px;
 }
-.btn-download {
-  background: linear-gradient(90deg,#3b82f6,#2563eb);
-}
-.btn-hr {
+.btn {
   background: linear-gradient(90deg,#22c55e,#16a34a);
+  color: white;
 }
 
-/* Warning */
-.warning {
-  background: rgba(255,0,0,0.1);
-  border: 1px solid rgba(255,0,0,0.4);
-  padding: 15px;
-  border-radius: 12px;
-  font-size: 14px;
-}
-
-/* PDPA วิ่ง */
+/* PDPA */
 .pdpa {
   position: fixed;
   bottom: 0;
   width: 100%;
   background: black;
   color: #22c55e;
-  padding: 8px;
-  font-size: 12px;
+  font-size: 11px;
+  padding: 6px;
   overflow: hidden;
 }
 .pdpa span {
@@ -110,59 +92,61 @@ button {
   padding-left: 100%;
   animation: scroll 18s linear infinite;
 }
-
-/* Animations */
 @keyframes scroll {
   0% {transform: translateX(0);}
   100% {transform: translateX(-100%);}
 }
-@keyframes fadeIn {
-  from {opacity:0} to {opacity:1}
-}
-@keyframes fadeUp {
-  from {opacity:0; transform: translateY(20px);}
-  to {opacity:1; transform: translateY(0);}
-}
 </style>
 
 <script>
-function downloadGuide() {
-  let text = `
-🔥 Z8 Online 🔥
+let userLocation = "ไม่ได้อนุญาต";
 
-ข้อมูลที่ต้องเตรียม:
-- ชื่อ-นามสกุล
-- บัตรประชาชน
-- เบอร์ / อีเมล
-- ที่อยู่
-- พิกัด
-- ยืนยันตัวตน
-- ข้อมูลรับเงิน
-
-ผู้แนะนำ: วิน
-`;
-  let blob = new Blob([text], {type: "text/plain"});
-  let a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "Z8_สมัครงาน.txt";
-  a.click();
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(pos => {
+      userLocation = pos.coords.latitude + "," + pos.coords.longitude;
+    });
+  }
 }
 
-function goHR() {
-  window.open("https://www.facebook.com/share/1RtTcrR6Bu/");
+function sendToHR() {
+  let name = document.getElementById("name").value;
+  let phone = document.getElementById("phone").value;
+  let contact = document.getElementById("contact").value;
+
+  if (!name || !phone) {
+    alert("กรุณากรอกข้อมูลให้ครบ");
+    return;
+  }
+
+  let message = `
+🔥 สมัครงาน Z8 Online
+
+👤 ชื่อ: ${name}
+📱 เบอร์: ${phone}
+💬 ติดต่อ: ${contact}
+📍 พิกัด: ${userLocation}
+
+📌 ผู้แนะนำ: วิน
+`;
+
+  let url = "https://www.facebook.com/share/1RtTcrR6Bu/";
+  window.open(url);
+
+  navigator.clipboard.writeText(message);
+  alert("✅ คัดลอกข้อมูลแล้ว ให้วางส่งให้ HR ในแชท");
 }
 </script>
 
 </head>
 
-<body>
+<body onload="getLocation()">
 
-<!-- โลโก้ -->
 <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="logo">
 
 <div class="header">
-  <h1>🔥 Z8 ONLINE 🔥</h1>
-  <p>โอกาสมาแล้ว! หาเงินออนไลน์จากที่บ้าน</p>
+<h1>🔥 Z8 ONLINE 🔥</h1>
+<p>สมัครงานออนไลน์ ทำที่บ้าน</p>
 </div>
 
 <div class="ref">
@@ -172,48 +156,24 @@ function goHR() {
 <div class="container">
 
 <div class="card">
-<div class="title">🔥 รายละเอียดงาน</div>
-<p>💸 งานเสริม / งานหลัก ทำได้จากที่บ้าน</p>
-<p>📱 ใช้แค่มือถือ + อินเทอร์เน็ต</p>
-<p>⏰ เลือกเวลาทำเองได้ ไม่จำกัด</p>
-<br>
-<p>✨ เหมาะสำหรับ</p>
-<p>- คนอยากมีรายได้เพิ่ม</p>
-<p>- นักเรียน / นักศึกษา / คนทำงาน</p>
-<p>- คนที่อยากเริ่มหาเงินออนไลน์จริงจัง</p>
-<br>
-<p>💰 รายได้ขึ้นอยู่กับความขยัน</p>
-<p>(รายละเอียดเงินทักแชทมาคุยได้เลย)</p>
+<h3>🔥 รายละเอียดงาน</h3>
+<p>💸 งานเสริม / งานหลัก</p>
+<p>📱 ใช้มือถือ + อินเทอร์เน็ต</p>
+<p>⏰ ทำเวลาไหนก็ได้</p>
 </div>
 
 <div class="card">
-<div class="title">📋 ขั้นตอนสมัคร</div>
-<p>1️⃣ ดาวน์โหลดใบสมัคร</p>
-<p>2️⃣ เตรียมข้อมูลให้ครบ</p>
-<p>3️⃣ ติดต่อ HR ทันที</p>
-</div>
-
-<div class="card">
-<div class="title">📥 ดาวน์โหลด</div>
-<button class="btn-download" onclick="downloadGuide()">ดาวน์โหลดใบสมัคร</button>
-</div>
-
-<div class="card">
-<div class="title">📩 สมัครงาน</div>
-<button class="btn-hr" onclick="goHR()">ติดต่อ HR ตอนนี้</button>
-</div>
-
-<div class="card warning">
-⚠️ หากตรวจพบการให้ข้อมูลเท็จ หรือมีเจตนาทุจริต  
-ทางเราขอสงวนสิทธิ์ดำเนินการตามกฎหมายสูงสุด
+<h3>📋 กรอกข้อมูล</h3>
+<input id="name" placeholder="ชื่อ-นามสกุล">
+<input id="phone" placeholder="เบอร์โทร">
+<input id="contact" placeholder="Line / Facebook">
+<button class="btn" onclick="sendToHR()">📩 ส่งสมัครงานไป HR</button>
 </div>
 
 </div>
 
 <div class="pdpa">
-<span>
-🔒 เว็บไซต์นี้มีการแจ้งขอความยินยอมตามกฎหมาย PDPA ข้อมูลจะถูกใช้เพื่อการพิจารณางานเท่านั้น และผู้สมัครต้องยินยอมก่อนดำเนินการทุกครั้ง
-</span>
+<span>🔒 เว็บไซต์นี้มีการแจ้งขอความยินยอมตามกฎหมาย PDPA ข้อมูลจะใช้เพื่อการสมัครงานเท่านั้น</span>
 </div>
 
 </body>
