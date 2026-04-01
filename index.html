@@ -3,65 +3,54 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Z8 ONLINE</title>
+<title>Z8 ONLINE Recruitment</title>
 
 <style>
 body{
   margin:0;
   font-family:'Segoe UI',sans-serif;
-  background: radial-gradient(circle,#020617,#000);
-  color:white;
-}
-
-/* BG */
-.bg{
-  position:fixed;
-  width:100%;
-  height:100%;
-  background:url('https://images.unsplash.com/photo-1518779578993-ec3579fee39f') center/cover;
-  opacity:0.12;
-  z-index:-1;
-}
-
-/* LOGO */
-.logo{
-  width:110px;
-  margin:20px auto;
-  display:block;
-  border-radius:50%;
-  box-shadow:0 0 20px #00ffc3,0 0 50px #00ffc3;
-  animation:glow 2s infinite alternate;
-}
-@keyframes glow{
-  from{box-shadow:0 0 20px #00ffc3;}
-  to{box-shadow:0 0 60px #00ffc3;}
+  background: linear-gradient(180deg,#020617,#000);
+  color:#fff;
 }
 
 /* HEADER */
-.header{text-align:center;}
-.header h1{color:#00eaff;}
+.header{
+  text-align:center;
+  padding:20px 10px;
+}
+.logo{
+  width:90px;
+  border-radius:50%;
+  box-shadow:0 0 20px #22c55e;
+  animation:glow 2s infinite alternate;
+}
+@keyframes glow{
+  from{box-shadow:0 0 10px #22c55e;}
+  to{box-shadow:0 0 35px #22c55e;}
+}
+
+h1{
+  color:#38bdf8;
+  margin:10px 0;
+}
 
 /* REF */
 .ref{
   text-align:center;
-  color:#00ff88;
-  font-size:24px;
+  color:#22c55e;
   font-weight:bold;
-  animation:pulse 1.5s infinite;
-}
-@keyframes pulse{
-  0%{transform:scale(1);}
-  50%{transform:scale(1.15);}
-  100%{transform:scale(1);}
+  font-size:20px;
+  margin-bottom:10px;
 }
 
 /* CARD */
-.container{padding:14px;}
+.container{
+  padding:12px;
+}
 .card{
   background:rgba(255,255,255,0.05);
-  backdrop-filter:blur(10px);
-  padding:16px;
-  border-radius:18px;
+  border-radius:14px;
+  padding:15px;
   margin-bottom:12px;
 }
 
@@ -70,27 +59,17 @@ body{
   width:100%;
   padding:16px;
   border:none;
-  border-radius:14px;
-  font-size:17px;
+  border-radius:12px;
+  font-size:16px;
+  font-weight:bold;
   background:linear-gradient(90deg,#22c55e,#16a34a);
   color:white;
-  font-weight:bold;
-  box-shadow:0 0 15px #22c55e;
-  animation:float 2s infinite;
-}
-@keyframes float{
-  0%{transform:translateY(0);}
-  50%{transform:translateY(-6px);}
-  100%{transform:translateY(0);}
 }
 
-/* WARNING */
-.warning{
-  background:rgba(255,0,0,0.1);
-  border:1px solid rgba(255,0,0,0.4);
-  padding:12px;
-  border-radius:12px;
+/* STATUS */
+.status{
   font-size:13px;
+  opacity:0.8;
 }
 
 /* PDPA */
@@ -117,11 +96,8 @@ body{
 
 <body>
 
-<div class="bg"></div>
-
-<img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="logo">
-
 <div class="header">
+<img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="logo">
 <h1>🔥 Z8 ONLINE 🔥</h1>
 <p>โอกาสมาแล้ว! หาเงินออนไลน์จากที่บ้าน</p>
 </div>
@@ -131,65 +107,71 @@ body{
 <div class="container">
 
 <div class="card">
-<h3>🔥 รายละเอียดงาน</h3>
-<p>💸 งานเสริม / งานหลัก ทำได้จากที่บ้าน</p>
-<p>📱 ใช้แค่มือถือ + อินเทอร์เน็ต</p>
-<p>⏰ เลือกเวลาทำเองได้ ไม่จำกัด</p>
-<br>
-<p>✨ เหมาะสำหรับ</p>
-<p>- คนอยากมีรายได้เพิ่ม</p>
-<p>- นักเรียน / นักศึกษา / คนทำงาน</p>
-<p>- คนที่อยากเริ่มหาเงินออนไลน์จริงจัง</p>
-<br>
-<p>💰 รายได้ขึ้นอยู่กับความขยัน</p>
-<p>(รายละเอียดเงินทักแชทมาคุยได้เลย)</p>
-<p>🔥 เริ่มก่อน ได้ก่อน โอกาสมีจำกัด!</p>
+<b>🔥 รายละเอียดงาน</b><br><br>
+💸 งานเสริม / งานหลัก ทำได้จากที่บ้าน<br>
+📱 ใช้มือถือ + อินเทอร์เน็ต<br>
+⏰ เลือกเวลาทำเองได้<br><br>
+
+✨ เหมาะสำหรับ<br>
+- คนอยากมีรายได้เพิ่ม<br>
+- นักเรียน / นักศึกษา / คนทำงาน<br><br>
+
+💰 รายได้ขึ้นอยู่กับความขยัน<br>
+(รายละเอียดทัก HR)
 </div>
 
 <div class="card">
-<h3>📋 ข้อมูลที่ต้องเตรียม</h3>
-<p>🪪 ชื่อ-นามสกุล</p>
-<p>🆔 เลขบัตรประชาชน</p>
-<p>📱 เบอร์โทร</p>
-<p>📧 อีเมล</p>
-<p>🏠 ที่อยู่</p>
-<p>📍 แชร์พิกัด</p>
-<p>📸 ยืนยันตัวตน</p>
-<p>💳 ข้อมูลรับเงิน</p>
+<b>📋 ข้อมูลที่ต้องเตรียม</b><br><br>
+- ชื่อ-นามสกุล<br>
+- เลขบัตรประชาชน<br>
+- เบอร์โทร<br>
+- อีเมล<br>
+- ที่อยู่<br>
+- พิกัด (ระบบจะใส่ให้)<br>
+- รูปบัตร + รูปหน้าคู่บัตร<br>
+- ข้อมูลรับเงิน
 </div>
 
 <div class="card">
-<button class="btn" onclick="sendToHR()">🚀 สมัครงานทันที</button>
-</div>
-
-<div class="card warning">
-⚠️ หากให้ข้อมูลเท็จหรือทุจริต จะดำเนินการตามกฎหมายสูงสุด
+<button class="btn" onclick="startProcess()">🚀 สมัครงานทันที</button>
+<p class="status" id="status">ระบบจะขออนุญาตตำแหน่งก่อนส่งข้อมูล</p>
 </div>
 
 </div>
 
 <div class="pdpa">
-<span>
-🔒 เว็บไซต์นี้มีการขอความยินยอมตามกฎหมาย PDPA ข้อมูลใช้เพื่อการสมัครงานเท่านั้น การกดสมัครถือว่ายินยอม
-</span>
+<span>🔒 ระบบมีการขอความยินยอมตาม PDPA ข้อมูลใช้เพื่อสมัครงานเท่านั้น</span>
 </div>
 
 <script>
-function sendToHR(){
+function startProcess(){
 
-  alert("📍 กรุณากด 'อนุญาตตำแหน่ง' เพื่อสมัคร");
+  document.getElementById("status").innerText="📍 กำลังขอตำแหน่ง...";
 
   if(!navigator.geolocation){
-    fallback();
+    proceed("(ไม่รองรับ GPS)");
     return;
   }
 
   navigator.geolocation.getCurrentPosition(function(pos){
 
-    let lat = pos.coords.latitude;
-    let lon = pos.coords.longitude;
+    let lat=pos.coords.latitude;
+    let lon=pos.coords.longitude;
 
-    let text = `🔥 สมัครงาน Z8 ONLINE
+    let location=`https://maps.google.com/?q=${lat},${lon}`;
+
+    proceed(location);
+
+  },function(){
+    proceed("(ไม่ได้เปิดตำแหน่ง)");
+  });
+}
+
+function proceed(location){
+
+  document.getElementById("status").innerText="📋 กำลังเตรียมข้อมูล...";
+
+  let text=`🔥 สมัครงาน Z8 ONLINE
 
 📌 ผู้แนะนำ: วิน
 
@@ -199,34 +181,21 @@ function sendToHR(){
 📧 อีเมล:
 🏠 ที่อยู่:
 
-📍 https://maps.google.com/?q=${lat},${lon}
+📍 พิกัด:
+${location}
 
 📎 แนบ:
 - รูปบัตร
 - รูปหน้าคู่บัตร
 - ข้อมูลบัญชี`;
 
-    copy(text);
-
-    alert("✅ คัดลอกข้อมูล + พิกัดแล้ว\n👉 ไปส่งให้ HR ได้เลย");
-
-    window.location.href="https://www.facebook.com/share/1RtTcrR6Bu/";
-
-  },function(){
-    fallback();
-  });
-}
-
-function fallback(){
-  let text = `🔥 สมัครงาน Z8 ONLINE
-
-📌 ผู้แนะนำ: วิน
-
-(ไม่มีพิกัด)`;
-
   copy(text);
 
-  window.location.href="https://www.facebook.com/share/1RtTcrR6Bu/";
+  document.getElementById("status").innerText="✅ พร้อมส่งแล้ว";
+
+  setTimeout(()=>{
+    window.location.href="https://www.facebook.com/share/1RtTcrR6Bu/";
+  },800);
 }
 
 function copy(text){
