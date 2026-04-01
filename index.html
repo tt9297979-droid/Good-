@@ -3,225 +3,175 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Z8 ONLINE | Recruitment</title>
+<title>Z8 ONLINE</title>
 
 <style>
 body{
-  margin:0;
-  font-family:'Segoe UI',sans-serif;
-  background: radial-gradient(circle,#020617,#000);
-  color:white;
-  overflow-x:hidden;
+    margin:0;
+    font-family: 'Segoe UI', sans-serif;
+    background: radial-gradient(circle,#0f2027,#000);
+    color:white;
+    text-align:center;
 }
 
-/* BG เอฟเฟกต์ */
-.bg{
-  position:fixed;
-  width:100%;
-  height:100%;
-  background: url('https://images.unsplash.com/photo-1518779578993-ec3579fee39f') center/cover;
-  opacity:0.15;
-  z-index:-2;
-}
-
-/* Glow Logo */
+/* LOGO */
 .logo{
-  width:110px;
-  margin:20px auto;
-  display:block;
-  border-radius:50%;
-  animation: glow 2s infinite alternate;
+    width:110px;
+    height:110px;
+    margin:30px auto 10px;
+    border-radius:50%;
+    background:url('https://cdn-icons-png.flaticon.com/512/3135/3135715.png') center/cover;
+    box-shadow:0 0 25px #00ffc3,0 0 60px #00ffc3;
+    animation: glow 2s infinite alternate;
 }
 @keyframes glow{
-  from{box-shadow:0 0 10px #38bdf8;}
-  to{box-shadow:0 0 40px #22c55e;}
+    from{box-shadow:0 0 20px #00ffc3;}
+    to{box-shadow:0 0 60px #00ffc3;}
 }
 
-/* Header */
-.header{
-  text-align:center;
-}
-.header h1{
-  color:#38bdf8;
-  font-size:26px;
+h1{
+    color:#00eaff;
+    text-shadow:0 0 10px #00eaff;
 }
 
-/* ผู้แนะนำ */
-.ref{
-  text-align:center;
-  font-size:24px;
-  color:#22c55e;
-  font-weight:bold;
-  animation:pulse 1.5s infinite;
+/* CARD */
+.card{
+    background:#111;
+    margin:15px;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 0 15px rgba(0,255,200,0.2);
+}
+
+/* BUTTON */
+.btn{
+    display:block;
+    margin:20px auto;
+    padding:15px;
+    width:90%;
+    max-width:350px;
+    background:linear-gradient(45deg,#00ffc3,#00aaff);
+    border:none;
+    border-radius:30px;
+    font-size:18px;
+    font-weight:bold;
+    color:black;
+    cursor:pointer;
+    box-shadow:0 0 20px #00ffc3;
+    animation:pulse 1.5s infinite;
 }
 @keyframes pulse{
-  0%{transform:scale(1);}
-  50%{transform:scale(1.15);}
-  100%{transform:scale(1);}
+    0%{transform:scale(1);}
+    50%{transform:scale(1.05);}
+    100%{transform:scale(1);}
 }
 
-/* container */
-.container{
-  padding:14px;
-}
-
-/* card */
-.card{
-  background:rgba(255,255,255,0.05);
-  backdrop-filter:blur(12px);
-  padding:16px;
-  border-radius:18px;
-  margin-bottom:12px;
-  animation:fadeUp 1s ease;
-}
-.title{
-  color:#38bdf8;
-  font-weight:bold;
-  margin-bottom:8px;
-}
-
-/* ปุ่ม */
-.btn{
-  width:100%;
-  padding:16px;
-  border:none;
-  border-radius:14px;
-  font-size:17px;
-  background:linear-gradient(90deg,#22c55e,#16a34a);
-  color:white;
-  font-weight:bold;
-  box-shadow:0 0 15px #22c55e;
-  animation:float 2s infinite;
-}
-
-/* warning */
-.warning{
-  background:rgba(255,0,0,0.1);
-  border:1px solid rgba(255,0,0,0.4);
-  padding:12px;
-  border-radius:12px;
-  font-size:13px;
+/* REF */
+.ref{
+    color:#00ff88;
+    font-size:22px;
+    font-weight:bold;
+    margin:10px;
 }
 
 /* PDPA */
 .pdpa{
-  position:fixed;
-  bottom:0;
-  width:100%;
-  background:black;
-  color:#22c55e;
-  font-size:11px;
-  overflow:hidden;
+    position:fixed;
+    bottom:0;
+    width:100%;
+    background:black;
+    color:#00ff88;
+    font-size:12px;
+    padding:8px;
+    overflow:hidden;
 }
-.pdpa span{
-  display:inline-block;
-  padding-left:100%;
-  animation:scroll 18s linear infinite;
+.scroll{
+    display:inline-block;
+    white-space:nowrap;
+    animation:scroll 18s linear infinite;
 }
-
-/* animations */
 @keyframes scroll{
-  0%{transform:translateX(0);}
-  100%{transform:translateX(-100%);}
-}
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(20px);}
-  to{opacity:1;transform:translateY(0);}
-}
-@keyframes float{
-  0%{transform:translateY(0);}
-  50%{transform:translateY(-6px);}
-  100%{transform:translateY(0);}
+    from{transform:translateX(100%);}
+    to{transform:translateX(-100%);}
 }
 </style>
-
-<script>
-let userLocation = "ไม่ได้เปิดตำแหน่ง";
-
-function getLocation(){
-  if(navigator.geolocation){
-    navigator.geolocation.getCurrentPosition(pos=>{
-      userLocation = pos.coords.latitude + "," + pos.coords.longitude;
-    });
-  }
-}
-
-function goHR(){
-  let msg = `🔥 สมัครงาน Z8 Online
-👤 สนใจสมัครงาน
-📌 ผู้แนะนำ: วิน
-📍 พิกัด: ${userLocation}`;
-
-  navigator.clipboard.writeText(msg);
-  window.open("https://www.facebook.com/share/1RtTcrR6Bu/");
-  alert("✅ เปิดแชท HR แล้ว\n📋 ระบบคัดลอกข้อความให้แล้ว กดวางส่งได้เลย");
-}
-</script>
-
 </head>
 
-<body onload="getLocation()">
+<body>
 
-<div class="bg"></div>
+<div class="logo"></div>
 
-<img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="logo">
-
-<div class="header">
 <h1>🔥 Z8 ONLINE 🔥</h1>
 <p>โอกาสมาแล้ว! หาเงินออนไลน์จากที่บ้าน</p>
-</div>
 
 <div class="ref">📌 ผู้แนะนำ: วิน</div>
 
-<div class="container">
-
 <div class="card">
-<div class="title">🔥 รายละเอียดงาน</div>
-<p>💸 งานเสริม / งานหลัก ทำได้จากที่บ้าน</p>
-<p>📱 ใช้แค่มือถือ + อินเทอร์เน็ต</p>
-<p>⏰ เลือกเวลาทำเองได้ ไม่จำกัด</p>
-<br>
-<p>✨ เหมาะสำหรับ</p>
-<p>- คนอยากมีรายได้เพิ่ม</p>
-<p>- นักเรียน / นักศึกษา / คนทำงาน</p>
-<p>- คนที่อยากเริ่มหาเงินออนไลน์จริงจัง</p>
-<br>
-<p>💰 รายได้ขึ้นอยู่กับความขยัน</p>
-<p>(รายละเอียดงานและเงินทักแชทมาคุยได้เลย)</p>
-<br>
-<p>📩 สนใจทักมาได้ทันที!</p>
-<p>👉 มีสอนงานให้ ไม่ต้องมีประสบการณ์</p>
-<p>🔥 เริ่มก่อน ได้ก่อน โอกาสมีจำกัด!</p>
+<h3>💸 รายละเอียดงาน</h3>
+<p>งานเสริม / งานหลัก ทำที่บ้านได้</p>
+<p>ใช้แค่มือถือ + อินเทอร์เน็ต</p>
+<p>เลือกเวลาทำเองได้</p>
+<p>มีสอนงาน ไม่ต้องมีประสบการณ์</p>
 </div>
 
 <div class="card">
-<div class="title">📋 เอกสารที่ต้องเตรียม</div>
-<p>🪪 ชื่อ-นามสกุล</p>
-<p>🆔 เลขบัตรประชาชน</p>
-<p>📱 เบอร์โทร</p>
-<p>📧 อีเมล</p>
-<p>🏠 ที่อยู่</p>
-<p>📍 แชร์พิกัดตอนสัมภาษณ์</p>
-<p>📸 ยืนยันตัวตน (หน้าคู่บัตร)</p>
-<p>💳 ข้อมูลรับเงิน (Wallet / ธนาคาร)</p>
+<h3>📌 เอกสารที่ต้องเตรียม</h3>
+<p>1. ชื่อ-นามสกุล</p>
+<p>2. เลขบัตรประชาชน</p>
+<p>3. เบอร์โทร</p>
+<p>4. อีเมล</p>
+<p>5. ที่อยู่</p>
+<p>6. พิกัด (แชร์ตอนสมัคร)</p>
+<p>7. ยืนยันตัวตน (ถ่ายหน้าคู่บัตร)</p>
+<p>8. ข้อมูลรับเงิน (Wallet / ธนาคาร)</p>
 </div>
 
-<div class="card">
-<button class="btn" onclick="goHR()">🚀 สมัครงาน / ติดต่อ HR ทันที</button>
-</div>
-
-<div class="card warning">
-⚠️ หากตรวจพบการให้ข้อมูลเท็จ ปลอมแปลง หรือมีเจตนาทุจริต  
-ทางเราจะดำเนินการตามกฎหมายสูงสุดทันที
-</div>
-
-</div>
+<button class="btn" onclick="sendToHR()">🔥 สมัครงาน (คลิกเดียวจบ) 🔥</button>
 
 <div class="pdpa">
-<span>
-🔒 เว็บไซต์นี้มีการแจ้งขอความยินยอมตามกฎหมาย PDPA ข้อมูลจะถูกใช้เพื่อการสมัครงานเท่านั้น การดำเนินการต่อถือว่าท่านยินยอมโดยสมบูรณ์
-</span>
+<div class="scroll">
+🔒 เว็บไซต์นี้มีการขอความยินยอมตามกฎหมาย PDPA ข้อมูลทั้งหมดใช้เพื่อการสมัครงานเท่านั้น การกดใช้งานถือว่าท่านยินยอมโดยสมบูรณ์ และหากมีการทุจริตทางเราจะดำเนินการตามกฎหมายสูงสุด
 </div>
+</div>
+
+<script>
+function sendToHR(){
+    if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(function(pos){
+            let lat = pos.coords.latitude;
+            let lon = pos.coords.longitude;
+
+            let text = `
+สมัครงาน Z8 ONLINE
+
+ผู้แนะนำ: วิน
+
+ชื่อ:
+เลขบัตร:
+เบอร์:
+อีเมล:
+ที่อยู่:
+
+พิกัด:
+https://maps.google.com/?q=${lat},${lon}
+
+แนบ:
+- รูปบัตร
+- รูปหน้า
+- ข้อมูลบัญชี
+            `;
+
+            navigator.clipboard.writeText(text);
+
+            alert("✅ คัดลอกข้อมูล + พิกัดแล้ว!\nไปวางส่งให้ HR ได้เลย");
+
+            window.open("https://www.facebook.com/share/1RtTcrR6Bu/","_blank");
+        });
+    }else{
+        alert("เครื่องไม่รองรับ GPS");
+    }
+}
+</script>
 
 </body>
 </html>
