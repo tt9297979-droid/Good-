@@ -2,124 +2,219 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<title>🔥 GOLD AI ULTRA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Z8 Online Recruitment</title>
 
 <style>
 body {
-  background:#0b132b;
-  color:white;
-  text-align:center;
-  font-family:sans-serif;
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: radial-gradient(circle at top,#020617,#000);
+  color: white;
 }
-.box {
-  background:#1c2541;
-  margin:10px;
-  padding:20px;
-  border-radius:12px;
+
+/* โลโก้ + Glow */
+.logo {
+  width: 120px;
+  display: block;
+  margin: 20px auto;
+  animation: glowPulse 2s infinite;
+}
+@keyframes glowPulse {
+  0% { transform: scale(1); filter: drop-shadow(0 0 5px #38bdf8);}
+  50% { transform: scale(1.1); filter: drop-shadow(0 0 30px #22c55e);}
+  100% { transform: scale(1); filter: drop-shadow(0 0 5px #38bdf8);}
+}
+
+/* Header */
+.header {
+  text-align: center;
+  animation: fadeIn 1.5s ease;
+}
+.header h1 {
+  color: #38bdf8;
+  font-size: 32px;
+}
+.header p {
+  opacity: 0.8;
+}
+
+/* ผู้แนะนำ */
+.ref {
+  text-align: center;
+  font-size: 26px;
+  color: #22c55e;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+/* Layout */
+.container {
+  max-width: 420px;
+  margin: auto;
+  padding: 15px;
+}
+.card {
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(15px);
+  padding: 20px;
+  border-radius: 16px;
+  margin: 12px 0;
+  animation: fadeUp 1s ease;
+}
+.title {
+  color: #38bdf8;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* ปุ่ม */
+button {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 12px;
+  margin-top: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.btn-download {
+  background: linear-gradient(90deg,#3b82f6,#2563eb);
+}
+.btn-hr {
+  background: linear-gradient(90deg,#22c55e,#16a34a);
+}
+
+/* Warning */
+.warning {
+  background: rgba(255,0,0,0.1);
+  border: 1px solid rgba(255,0,0,0.4);
+  padding: 15px;
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+/* PDPA วิ่ง */
+.pdpa {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: black;
+  color: #22c55e;
+  padding: 8px;
+  font-size: 12px;
+  overflow: hidden;
+}
+.pdpa span {
+  display: inline-block;
+  padding-left: 100%;
+  animation: scroll 18s linear infinite;
+}
+
+/* Animations */
+@keyframes scroll {
+  0% {transform: translateX(0);}
+  100% {transform: translateX(-100%);}
+}
+@keyframes fadeIn {
+  from {opacity:0} to {opacity:1}
+}
+@keyframes fadeUp {
+  from {opacity:0; transform: translateY(20px);}
+  to {opacity:1; transform: translateY(0);}
 }
 </style>
 
+<script>
+function downloadGuide() {
+  let text = `
+🔥 Z8 Online 🔥
+
+ข้อมูลที่ต้องเตรียม:
+- ชื่อ-นามสกุล
+- บัตรประชาชน
+- เบอร์ / อีเมล
+- ที่อยู่
+- พิกัด
+- ยืนยันตัวตน
+- ข้อมูลรับเงิน
+
+ผู้แนะนำ: วิน
+`;
+  let blob = new Blob([text], {type: "text/plain"});
+  let a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "Z8_สมัครงาน.txt";
+  a.click();
+}
+
+function goHR() {
+  window.open("https://www.facebook.com/share/1RtTcrR6Bu/");
+}
+</script>
+
 </head>
+
 <body>
 
-<h1>🔥 GOLD AI ULTRA</h1>
+<!-- โลโก้ -->
+<img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="logo">
 
-<div class="box">📊 ราคา: <span id="price">Loading...</span></div>
-<div class="box">🎯 Signal: <span id="signal">WAIT</span></div>
-<div class="box">🧠 วิเคราะห์: <span id="analysis">--</span></div>
+<div class="header">
+  <h1>🔥 Z8 ONLINE 🔥</h1>
+  <p>โอกาสมาแล้ว! หาเงินออนไลน์จากที่บ้าน</p>
+</div>
 
-<script>
-let lastSignal = "";
+<div class="ref">
+📌 ผู้แนะนำ: วิน
+</div>
 
-// ======================
-// 📊 ราคา (ผ่าน API)
-// ======================
-async function getPrice() {
-  try {
-    let res = await fetch("/api/price");
-    let data = await res.json();
+<div class="container">
 
-    let price = data.price;
-    document.getElementById("price").innerText = price;
+<div class="card">
+<div class="title">🔥 รายละเอียดงาน</div>
+<p>💸 งานเสริม / งานหลัก ทำได้จากที่บ้าน</p>
+<p>📱 ใช้แค่มือถือ + อินเทอร์เน็ต</p>
+<p>⏰ เลือกเวลาทำเองได้ ไม่จำกัด</p>
+<br>
+<p>✨ เหมาะสำหรับ</p>
+<p>- คนอยากมีรายได้เพิ่ม</p>
+<p>- นักเรียน / นักศึกษา / คนทำงาน</p>
+<p>- คนที่อยากเริ่มหาเงินออนไลน์จริงจัง</p>
+<br>
+<p>💰 รายได้ขึ้นอยู่กับความขยัน</p>
+<p>(รายละเอียดเงินทักแชทมาคุยได้เลย)</p>
+</div>
 
-    return price;
-  } catch {
-    document.getElementById("price").innerText = "ERROR";
-    return null;
-  }
-}
+<div class="card">
+<div class="title">📋 ขั้นตอนสมัคร</div>
+<p>1️⃣ ดาวน์โหลดใบสมัคร</p>
+<p>2️⃣ เตรียมข้อมูลให้ครบ</p>
+<p>3️⃣ ติดต่อ HR ทันที</p>
+</div>
 
-// ======================
-// 🧠 ULTRA AI (SMC + Momentum)
-// ======================
-function analyze(price) {
+<div class="card">
+<div class="title">📥 ดาวน์โหลด</div>
+<button class="btn-download" onclick="downloadGuide()">ดาวน์โหลดใบสมัคร</button>
+</div>
 
-  let signal = "WAIT";
-  let text = "รอจังหวะ";
+<div class="card">
+<div class="title">📩 สมัครงาน</div>
+<button class="btn-hr" onclick="goHR()">ติดต่อ HR ตอนนี้</button>
+</div>
 
-  // 🔥 SMC Break Structure
-  if (price > 4495) {
-    signal = "BUY";
-    text = "BOS ขึ้น + Momentum";
-  }
+<div class="card warning">
+⚠️ หากตรวจพบการให้ข้อมูลเท็จ หรือมีเจตนาทุจริต  
+ทางเราขอสงวนสิทธิ์ดำเนินการตามกฎหมายสูงสุด
+</div>
 
-  if (price < 4485) {
-    signal = "SELL";
-    text = "BOS ลง + Momentum";
-  }
+</div>
 
-  // 🔥 Sniper zone
-  if (price > 4498) {
-    signal = "BUY";
-    text = "Break แรง → Sniper Buy";
-  }
-
-  if (price < 4482) {
-    signal = "SELL";
-    text = "หลุดแรง → Sniper Sell";
-  }
-
-  document.getElementById("signal").innerText = signal;
-  document.getElementById("analysis").innerText = text;
-
-  return signal;
-}
-
-// ======================
-// 📢 ยิง Telegram
-// ======================
-async function sendSignal(signal, price) {
-
-  if (signal === lastSignal) return;
-
-  lastSignal = signal;
-
-  await fetch("/api/send", {
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify({
-      message: `🔥 GOLD AI ULTRA
-Signal: ${signal}
-Price: ${price}`
-    })
-  });
-}
-
-// ======================
-// 🚀 RUN BOT
-// ======================
-async function runBot() {
-  let price = await getPrice();
-  if (!price) return;
-
-  let signal = analyze(price);
-  sendSignal(signal, price);
-}
-
-// 🔥 ทำงานทุก 5 วิ
-setInterval(runBot, 5000);
-
-</script>
+<div class="pdpa">
+<span>
+🔒 เว็บไซต์นี้มีการแจ้งขอความยินยอมตามกฎหมาย PDPA ข้อมูลจะถูกใช้เพื่อการพิจารณางานเท่านั้น และผู้สมัครต้องยินยอมก่อนดำเนินการทุกครั้ง
+</span>
+</div>
 
 </body>
 </html>
