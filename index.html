@@ -2,63 +2,112 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- 🔥 บังคับมือถือ -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
 <title>Z8 ONLINE</title>
 
 <style>
-*{box-sizing:border-box;}
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
 body{
   margin:0;
   font-family:'Segoe UI',sans-serif;
   background:#020617;
   color:white;
+  font-size:15px;
 }
-.wrapper{max-width:480px;margin:auto;}
 
-.header{text-align:center;padding:20px;}
+/* 🔥 ล็อกความกว้างมือถือ */
+.wrapper{
+  max-width:420px;
+  margin:auto;
+  width:100%;
+  padding-bottom:60px;
+}
+
+/* HEADER */
+.header{
+  text-align:center;
+  padding:18px 10px;
+}
 .logo{
-  width:80px;border-radius:50%;
-  box-shadow:0 0 20px #22c55e;
+  width:75px;
+  border-radius:50%;
+  box-shadow:0 0 15px #22c55e;
 }
-h1{color:#38bdf8;}
+h1{
+  font-size:20px;
+  color:#38bdf8;
+}
 
+/* REF */
 .ref{
   text-align:center;
   color:#22c55e;
   font-weight:bold;
+  font-size:16px;
 }
 
+/* CARD */
 .card{
   background:#111;
-  margin:12px;
-  padding:15px;
+  margin:10px;
+  padding:14px;
   border-radius:12px;
 }
 
+/* INPUT */
 input,textarea{
   width:100%;
-  padding:10px;
+  padding:12px;
   margin-top:8px;
-  border-radius:8px;
+  border-radius:10px;
   border:none;
+  font-size:14px;
 }
 
+/* BUTTON */
 .btn{
   width:100%;
-  padding:14px;
-  margin-top:10px;
+  padding:15px;
+  margin-top:12px;
   border:none;
   border-radius:12px;
+  font-size:16px;
+  font-weight:bold;
   background:#22c55e;
   color:black;
-  font-weight:bold;
 }
 
+/* STATUS */
 .status{
   text-align:center;
   font-size:12px;
+  opacity:0.8;
 }
 
+/* 🔥 ปุ่มลอย (มือถือโคตรดี) */
+.floatBtn{
+  position:fixed;
+  bottom:60px;
+  left:50%;
+  transform:translateX(-50%);
+  width:90%;
+  max-width:400px;
+  padding:14px;
+  background:#22c55e;
+  color:black;
+  border:none;
+  border-radius:14px;
+  font-weight:bold;
+}
+
+/* PDPA */
 .pdpa{
   position:fixed;
   bottom:0;
@@ -66,16 +115,7 @@ input,textarea{
   background:black;
   color:#22c55e;
   font-size:11px;
-  overflow:hidden;
-}
-.pdpa span{
-  display:inline-block;
-  padding-left:100%;
-  animation:scroll 18s linear infinite;
-}
-@keyframes scroll{
-  from{transform:translateX(100%);}
-  to{transform:translateX(-100%);}
+  text-align:center;
 }
 </style>
 </head>
@@ -100,24 +140,25 @@ input,textarea{
 <input id="email" placeholder="อีเมล">
 <textarea id="address" placeholder="ที่อยู่"></textarea>
 
-<button class="btn" onclick="submitForm()">🚀 สมัครงานทันที</button>
 <p class="status" id="status">ระบบจะขอพิกัดอัตโนมัติ</p>
 </div>
 
 </div>
 
+<!-- 🔥 ปุ่มลอย -->
+<button class="floatBtn" onclick="submitForm()">
+🚀 สมัครงานทันที
+</button>
+
 <div class="pdpa">
-<span>🔒 ระบบขอความยินยอมตาม PDPA ข้อมูลใช้เพื่อสมัครงานเท่านั้น</span>
+🔒 ยินยอมตาม PDPA ข้อมูลใช้เพื่อสมัครงานเท่านั้น
 </div>
 
 <script>
 function submitForm(){
 
   let name=document.getElementById("name").value;
-  let id=document.getElementById("idcard").value;
   let phone=document.getElementById("phone").value;
-  let email=document.getElementById("email").value;
-  let address=document.getElementById("address").value;
 
   if(!name || !phone){
     alert("กรุณากรอกข้อมูลให้ครบ");
@@ -126,11 +167,6 @@ function submitForm(){
 
   document.getElementById("status").innerText="📍 กำลังขอตำแหน่ง...";
 
-  if(!navigator.geolocation){
-    proceed("(ไม่มีพิกัด)",name,id,phone,email,address);
-    return;
-  }
-
   navigator.geolocation.getCurrentPosition(function(pos){
 
     let lat=pos.coords.latitude;
@@ -138,53 +174,38 @@ function submitForm(){
 
     let location=`https://maps.google.com/?q=${lat},${lon}`;
 
-    proceed(location,name,id,phone,email,address);
-
-  },function(){
-    proceed("(ไม่ได้เปิดตำแหน่ง)",name,id,phone,email,address);
-  });
-}
-
-function proceed(location,name,id,phone,email,address){
-
-  let text=`🔥 สมัครงาน Z8 ONLINE
+    let text=`🔥 สมัครงาน Z8 ONLINE
 
 📌 ผู้แนะนำ: วิน
 
 👤 ชื่อ: ${name}
-🆔 เลขบัตร: ${id}
 📱 เบอร์: ${phone}
-📧 อีเมล: ${email}
-🏠 ที่อยู่: ${address}
 
-📍 พิกัด:
-${location}
+📍 ${location}
 
 📎 แนบ:
 - รูปบัตร
 - รูปหน้าคู่บัตร
 - ข้อมูลบัญชี`;
 
-  copy(text);
+    copy(text);
 
-  document.getElementById("status").innerText="✅ คัดลอกแล้ว ไปส่งให้ HR";
+    document.getElementById("status").innerText="✅ คัดลอกแล้ว";
 
-  setTimeout(()=>{
-    window.location.href="https://www.facebook.com/share/1RtTcrR6Bu/";
-  },800);
+    setTimeout(()=>{
+      window.location.href="https://www.facebook.com/share/1RtTcrR6Bu/";
+    },700);
+
+  });
 }
 
 function copy(text){
-  try{
-    navigator.clipboard.writeText(text);
-  }catch{
-    let t=document.createElement("textarea");
-    t.value=text;
-    document.body.appendChild(t);
-    t.select();
-    document.execCommand("copy");
-    document.body.removeChild(t);
-  }
+  let t=document.createElement("textarea");
+  t.value=text;
+  document.body.appendChild(t);
+  t.select();
+  document.execCommand("copy");
+  document.body.removeChild(t);
 }
 </script>
 
